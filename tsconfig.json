@@ -6,6 +6,7 @@
     "outDir": "lib",
     "rootDir": "src",
     "strict": true,
+    "allowJs": true,
     "target": "es2017"
   },
   "include": [
