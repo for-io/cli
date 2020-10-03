@@ -3,8 +3,8 @@ cli
 
 For.io command line interface tool
 
-[![Version](https://img.shields.io/npm/v/cli.svg)](https://npmjs.org/package/cli)
-[![License](https://img.shields.io/npm/l/cli.svg)](https://github.com/nmihajlovski/cli/blob/master/package.json)
+[![Version](https://img.shields.io/npm/v/for-io-cli.svg)](https://npmjs.org/package/for-io-cli)
+[![License](https://img.shields.io/npm/l/for-io-cli.svg)](https://github.com/for-io/cli/blob/master/package.json)
 
 <!-- toc -->
 * [Usage](#usage)
