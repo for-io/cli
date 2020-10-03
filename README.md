@@ -17,7 +17,7 @@ $ npm install -g for-io-cli
 $ for.io COMMAND
 running command...
 $ for.io (-v|--version|version)
-for-io-cli/0.0.1 linux-x64 node-v10.19.0
+for-io-cli/1.0.0 linux-x64 node-v10.19.0
 $ for.io --help [COMMAND]
 USAGE
   $ for.io COMMAND
@@ -58,6 +58,7 @@ ARGUMENTS
   TOKEN  connection token, as provided by studio.for.io
 
 OPTIONS
+  -d, --debug          enable debug mode (default: disabled)
   -h, --help           show CLI help
   -m, --mongo=mongo    MongoDB connection url (default: mongodb://localhost:27017)
   -o, --origin=origin  allowed origin domain for CORS (default: https://studio.for.io)
@@ -66,8 +67,8 @@ OPTIONS
 
 EXAMPLE
   $ for.io listen kdf9035hd0
-  $ for.io listen j94509fhg4 -p 3002
+  $ for.io listen j94509fhg4 -p 3030
 ```
 
-_See code: [src/commands/listen.ts](https://github.com/for-io/cli/blob/v0.0.1/src/commands/listen.ts)_
+_See code: [src/commands/listen.ts](https://github.com/for-io/cli/blob/v1.0.0/src/commands/listen.ts)_
 <!-- commandsstop -->

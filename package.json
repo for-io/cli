@@ -1,6 +1,6 @@
 {
   "name": "for-io-cli",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "For.io command line interface tool",
   "main": "lib/index.js",
   "author": "Nikolche Mihajlovski",
