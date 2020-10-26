@@ -61,7 +61,7 @@ function isIgnored(name) {
     return ignore;
 }
 
-function listenAndWatchDir({ workspaceDir, expectedToken, server }) {
+function listenAndWatchDir({ workspaceDir, expectedToken, server, origin }) {
     let workspaceRoot = path.resolve(workspaceDir);
 
     function resolvePath(relName) {
@@ -114,7 +114,7 @@ function listenAndWatchDir({ workspaceDir, expectedToken, server }) {
 
     });
 
-    io.origins(['https://studio.for.io:443', 'http://for.lan:80']); // FIXME
+    io.origins([origin]);
 
     io.listen(server);
 }

@@ -56,7 +56,7 @@ $ for.io listen j94509fhg4 my-workspace -p 3030
     const token = args.token
     const workspace = args.workspace
 
-    const origin = flags.origin ?? 'https://studio.for.io'
+    const origin = flags.origin ?? 'https://studio.for.io:443'
     const port = flags.port ?? 3334
     const mongoUrl = flags.mongo ?? 'mongodb://localhost:27017'
     const ttl = flags.ttl

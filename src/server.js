@@ -48,7 +48,7 @@ async function start({ token, origin, mongoUrl, port, ttl, debugMode, workspace 
   server.on('error', onError);
 
   if (workspace) {
-    listenAndWatchDir({ workspaceDir: workspace, expectedToken: token, server });
+    listenAndWatchDir({ workspaceDir: workspace, expectedToken: token, server, origin });
   }
 
   function onError(error) {
