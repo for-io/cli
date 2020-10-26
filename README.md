@@ -17,7 +17,7 @@ $ npm install -g for-io-cli
 $ for.io COMMAND
 running command...
 $ for.io (-v|--version|version)
-for-io-cli/1.0.1 linux-x64 node-v10.19.0
+for-io-cli/1.1.0 linux-x64 node-v10.19.0
 $ for.io --help [COMMAND]
 USAGE
   $ for.io COMMAND
@@ -27,7 +27,7 @@ USAGE
 # Commands
 <!-- commands -->
 * [`for.io help [COMMAND]`](#forio-help-command)
-* [`for.io listen TOKEN`](#forio-listen-token)
+* [`for.io listen TOKEN [WORKSPACE]`](#forio-listen-token-workspace)
 
 ## `for.io help [COMMAND]`
 
@@ -46,16 +46,17 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.0/src/commands/help.ts)_
 
-## `for.io listen TOKEN`
+## `for.io listen TOKEN [WORKSPACE]`
 
-Listen for incoming connections from https://studio.for.io
+Listen for incoming connections from the web browser (https://studio.for.io), to run MongoDB queries and sync project files
 
 ```
 USAGE
-  $ for.io listen TOKEN
+  $ for.io listen TOKEN [WORKSPACE]
 
 ARGUMENTS
-  TOKEN  connection token, as provided by studio.for.io
+  TOKEN      connection token, as provided by studio.for.io
+  WORKSPACE  local workspace directory to synchronize with the browser
 
 OPTIONS
   -d, --debug          enable debug mode (default: disabled)
@@ -66,9 +67,9 @@ OPTIONS
   -t, --ttl=ttl        time-to-live, terminate after T seconds (default: unlimited)
 
 EXAMPLE
-  $ for.io listen kdf9035hd0
-  $ for.io listen j94509fhg4 -p 3030
+  $ for.io listen kdf9035hd0 my-workspace
+  $ for.io listen j94509fhg4 my-workspace -p 3030
 ```
 
-_See code: [src/commands/listen.ts](https://github.com/for-io/cli/blob/v1.0.1/src/commands/listen.ts)_
+_See code: [src/commands/listen.ts](https://github.com/for-io/cli/blob/v1.1.0/src/commands/listen.ts)_
 <!-- commandsstop -->
