@@ -114,9 +114,21 @@ function listenAndWatchDir({ workspaceDir, expectedToken, server, origin }) {
 
     });
 
-    io.origins([origin]);
+    io.origins([originWithPort(origin)]);
 
     io.listen(server);
+}
+
+function originWithPort(origin) {
+    if (/:\d+$/.test(origin)) {
+        return origin;
+    } else {
+        if (origin.startsWith('https://')) {
+            return origin + ':443';
+        } else {
+            return origin + ':80';
+        }
+    }
 }
 
 function watchDir({ projectDir, projectName, socket, expectedToken }) {
