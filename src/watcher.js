@@ -49,6 +49,10 @@ const SYNC_BASENAMES = {
     '.for.io': true,
 };
 
+const IGNORED_BASENAMES = {
+    'node_modules': true,
+};
+
 // const debug = console.log.bind(console);
 const debug = () => { };
 
@@ -56,9 +60,16 @@ function isIgnored(name) {
     let ext = path.extname(name);
     let basename = path.basename(name);
 
-    if (basename === 'node_modules') return true;
+    let ignore;
 
-    let ignore = ext && !SYNC_EXTENSIONS[ext] && !SYNC_BASENAMES[basename];
+    if (ext) {
+        // with extension
+        ignore = !SYNC_EXTENSIONS[ext] && !SYNC_BASENAMES[basename];
+
+    } else {
+        // without extension
+        ignore = IGNORED_BASENAMES[basename] === true || (basename.startsWith('.') && !SYNC_BASENAMES[basename]);
+    }
 
     return ignore;
 }
