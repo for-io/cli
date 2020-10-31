@@ -17,7 +17,7 @@ $ npm install -g for-io-cli
 $ for.io COMMAND
 running command...
 $ for.io (-v|--version|version)
-for-io-cli/1.1.2 linux-x64 node-v10.19.0
+for-io-cli/1.1.3 linux-x64 node-v10.19.0
 $ for.io --help [COMMAND]
 USAGE
   $ for.io COMMAND
@@ -71,5 +71,5 @@ EXAMPLE
   $ for.io listen j94509fhg4 my-workspace -p 3030
 ```
 
-_See code: [src/commands/listen.ts](https://github.com/for-io/cli/blob/v1.1.2/src/commands/listen.ts)_
+_See code: [src/commands/listen.ts](https://github.com/for-io/cli/blob/v1.1.3/src/commands/listen.ts)_
 <!-- commandsstop -->
