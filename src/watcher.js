@@ -56,6 +56,8 @@ function isIgnored(name) {
     let ext = path.extname(name);
     let basename = path.basename(name);
 
+    if (basename === 'node_modules') return true;
+
     let ignore = ext && !SYNC_EXTENSIONS[ext] && !SYNC_BASENAMES[basename];
 
     return ignore;
@@ -96,7 +98,7 @@ function listenAndWatchDir({ workspaceDir, expectedToken, server, origin }) {
 
         socket.on(BROWSER_CHANGE, ({ change, token }) => {
             if (!watcher) {
-                console.error('Watcher was not properly initialized!');
+                debug('Watcher was not properly initialized!');
                 return;
             }
 
