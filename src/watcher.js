@@ -29,6 +29,7 @@ const chokidar = require('chokidar');
 const crypto = require('crypto');
 const path = require('path');
 const synchronizer = require('./synchronizer');
+const { shouldIgnore } = require('./ignoreutil');
 const io = require('socket.io')({ serveClient: false });
 
 const FS_CHANGE = 'fs-change';
@@ -36,43 +37,8 @@ const BROWSER_CHANGE = 'browser-change';
 
 const MAX_SIZE = 256 * 1024;
 
-const SYNC_EXTENSIONS = {
-    '.js': true,
-    '.ts': true,
-    '.json': true,
-    '.txt': true,
-    '.md': true,
-};
-
-const SYNC_BASENAMES = {
-    '.gitignore': true,
-    '.for.io': true,
-};
-
-const IGNORED_BASENAMES = {
-    'node_modules': true,
-};
-
 // const debug = console.log.bind(console);
 const debug = () => { };
-
-function isIgnored(name) {
-    let ext = path.extname(name);
-    let basename = path.basename(name);
-
-    let ignore;
-
-    if (ext) {
-        // with extension
-        ignore = !SYNC_EXTENSIONS[ext] && !SYNC_BASENAMES[basename];
-
-    } else {
-        // without extension
-        ignore = IGNORED_BASENAMES[basename] === true || (basename.startsWith('.') && !SYNC_BASENAMES[basename]);
-    }
-
-    return ignore;
-}
 
 function listenAndWatchDir({ workspaceDir, expectedToken, server, origin }) {
     let workspaceRoot = path.resolve(workspaceDir);
@@ -153,7 +119,7 @@ function watchDir({ projectDir, projectName, socket, expectedToken }) {
     console.info(`Watching and synchronizing project folder "${projectDir}" with the browser`);
 
     const watcher = chokidar.watch(projectDir, {
-        ignored: isIgnored,
+        ignored: shouldIgnore,
         persistent: true,
         alwaysStat: true,
         atomic: 100,
@@ -164,8 +130,11 @@ function watchDir({ projectDir, projectName, socket, expectedToken }) {
     });
 
     // https://nodejs.org/api/fs.html#fs_class_fs_stats
-    async function onFileAddedOrChanged(filename, stats) {
+    async function onFileAddedOrChanged(absFilename, stats) {
         try {
+            let filename = trimProjectDir(absFilename);
+
+            if (shouldIgnore(filename)) return;
             if (!stats) throw new Error('No file stats!');
 
             if (stats.size > MAX_SIZE) {
@@ -173,10 +142,9 @@ function watchDir({ projectDir, projectName, socket, expectedToken }) {
                 return;
             }
 
-            let content = await fs.readFile(filename, 'utf8');
+            let content = await fs.readFile(absFilename, 'utf8');
             let fsTime = stats.mtimeMs;
             let fsHash = MD5(content);
-            filename = trimProjectDir(filename);
 
             debug(`File ${filename} change, time: ${stats.mtimeMs}, md5: ${fsHash}`);
 
@@ -188,10 +156,13 @@ function watchDir({ projectDir, projectName, socket, expectedToken }) {
         }
     }
 
-    async function onFileOrFolderRemoved(filename) {
+    async function onFileOrFolderRemoved(absFilename) {
         try {
+            let filename = trimProjectDir(absFilename);
+
+            if (shouldIgnore(filename)) return;
+
             let fsTime = new Date().getTime();
-            filename = trimProjectDir(filename);
 
             debug(`File ${filename} removed, time: ${fsTime}`);
 
