@@ -60,30 +60,39 @@ function listenAndWatchDir({ workspaceDir, expectedToken, server, origin }) {
         let targetProjectName;
 
         socket.on('init-watch', ({ token, listenFS, projectName }) => {
-            debug('INIT', { token, listenFS, projectName });
+            try {
+                debug('INIT', { token, listenFS, projectName });
 
-            if (expectedToken === token) {
-                if (listenFS) {
-                    let projectDir = resolvePath(path.join(workspaceDir, projectName));
-                    targetProjectName = projectName;
-                    watcher = watchDir({ projectDir, projectName, socket, expectedToken });
+                if (expectedToken === token) {
+                    if (listenFS) {
+                        let projectDir = resolvePath(path.join(workspaceDir, projectName));
+                        targetProjectName = projectName;
+                        watcher = watchDir({ projectDir, projectName, socket, expectedToken });
+                    }
+                } else {
+                    throw new Error('Received invalid token!');
                 }
-            } else {
-                console.error('Received invalid token!');
+
+            } catch (e) {
+                logError(e);
             }
         });
 
         socket.on(BROWSER_CHANGE, ({ change, token }) => {
-            if (!watcher) {
-                debug('Watcher was not properly initialized!');
-                return;
-            }
+            try {
+                if (!watcher) {
+                    throw new Error('Watcher was not properly initialized!');
+                }
 
-            if (expectedToken === token && targetProjectName === change.projectName) {
-                let filename = resolvePath(path.join(workspaceDir, change.projectName, change.name));
-                synchronizer.syncBrowserChange(filename, change, watcher);
-            } else {
-                console.error('Received invalid token or invalid project name!');
+                if (expectedToken === token && targetProjectName === change.projectName) {
+                    let filename = resolvePath(path.join(workspaceDir, change.projectName, change.name));
+                    synchronizer.syncBrowserChange(filename, change, watcher);
+                } else {
+                    throw new Error('Received invalid token or invalid project name!');
+                }
+
+            } catch (e) {
+                logError(e);
             }
         });
 
@@ -152,7 +161,7 @@ function watchDir({ projectDir, projectName, socket, expectedToken }) {
             socket.emit(FS_CHANGE, { change, 'token': expectedToken });
 
         } catch (e) {
-            console.error(e);
+            logError(e);
         }
     }
 
@@ -170,7 +179,7 @@ function watchDir({ projectDir, projectName, socket, expectedToken }) {
             socket.emit(FS_CHANGE, { change, 'token': expectedToken });
 
         } catch (e) {
-            console.error(e);
+            logError(e);
         }
     }
 
@@ -191,9 +200,9 @@ function watchDir({ projectDir, projectName, socket, expectedToken }) {
     watcher.on('unlink', onFileOrFolderRemoved)
     watcher.on('unlinkDir', onFileOrFolderRemoved)
 
-    watcher.on('addDir', async (path, stats) => {
-        debug(`DIR ${path} added, time: ${stats.mtimeMs}`);
-    });
+    // watcher.on('addDir', async (path, stats) => {
+    //     debug(`DIR ${path} added, time: ${stats.mtimeMs}`);
+    // });
 
     // watcher.on('raw', async (event, name, details) => {
     //     log('Raw event', {event, name, details});
@@ -208,6 +217,10 @@ function watchDir({ projectDir, projectName, socket, expectedToken }) {
 
 function MD5(s) {
     return crypto.createHash('md5').update(s, 'utf-8').digest('hex');
+}
+
+function logError(e) {
+    console.warn(e + '');
 }
 
 module.exports = { listenAndWatchDir };
